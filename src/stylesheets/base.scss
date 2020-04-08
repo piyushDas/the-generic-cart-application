@@ -1,0 +1,60 @@
+@import './variables';
+html {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+  &:focus {
+    outline: none;
+  }
+}
+
+body {
+  background-color: #fff;
+  font-family: Verdana, sans-serif;
+}
+
+.overlay {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(39, 39, 39, 0.59);
+}
+
+.modal-content{
+  width: 70%;
+  position: fixed;
+  height: auto;
+  background: #fff;
+  left: 50%;
+  transform: translate(-50%);
+  top: 20%;
+  z-index: 3;
+  box-shadow: 0 0 10px #333;
+  .modal-title {
+    padding: 12px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  ul {
+    padding: 0 12px;
+    li {
+      margin: 6px 0;
+      font-size: 14px;
+      color: $secondary-font-color;
+    }
+  }
+  button {
+    background: #fff;
+    width: 50%;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 13px;
+    margin-top: 16px;
+    color: $modal-button-font-color;
+    font-weight: 600;
+  }
+}

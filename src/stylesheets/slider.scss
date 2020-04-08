@@ -1,0 +1,18 @@
+@import './variables';
+.ui-widget-content {
+    margin: 24px;
+    &.ui-slider-horizontal{
+        border: none;
+        background: #ccc;
+        height: 2px;
+    }
+    .ui-widget-header {
+        background: $slider-bar-color;
+    }
+
+    .ui-slider-handle {
+        top: -.55em;
+        margin-left: -.6em;
+        border-radius: 20px;
+    }
+}

@@ -1,0 +1,31 @@
+@import './variables';
+
+.app-header {
+    position: fixed;
+    background: $header-bg;
+    height: 40px;
+    line-height: 40px;
+    width: 100%;
+    top: 0;
+    .brand {
+        width: 60%;
+    }
+    .right-panel {
+        position: absolute;
+        right: 10px;
+        display: flex;
+    }
+}
+
+.app-footer {
+    background: $header-bg;
+    color: #fff;
+    height: 32px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
