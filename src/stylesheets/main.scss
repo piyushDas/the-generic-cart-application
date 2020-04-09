@@ -160,6 +160,23 @@
         margin-bottom: 32px;
         .filter {
             width: 220px;
+            > div:first-of-type {
+                padding: 16px;
+                font-weight: 600;
+            }
+            > div:last-of-type{
+                display: flex;
+                justify-content: center;
+                button {
+                    padding: 6px 12px;
+                    margin-top: 10px;
+                    border-radius: 28px;
+                    font-size: 12px;
+                    background: $blue-color;
+                    color: #fff;
+                    border: none;
+                }
+            }
         }
         .list {
             width: calc(100% - 220px);
@@ -176,6 +193,7 @@
                     border-bottom: 2px solid transparent;
                     padding-bottom: 6px;
                     color: $secondary-font-color;
+                    cursor: pointer;
                     &.active{
                         color: $blue-color;
                         border-color:$blue-color;
@@ -332,5 +350,13 @@
                 }
             }
         }
+    }
+
+    .no-cart-content {
+        display: flex;
+        margin-top: 40px;
+        justify-content: center;
+        padding: 20px;
+        color: $secondary-font-color;
     }
 }

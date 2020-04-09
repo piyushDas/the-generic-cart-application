@@ -47,6 +47,11 @@ const Cart = function () {
 
     this.renderCart = () => {
         document.getElementById('cart-items-count').innerHTML = this.cart.length || 0
+        if (this.cart.length > 0) {
+            document.getElementById('cart-items-count').classList.remove('hide')
+        } else {
+            document.getElementById('cart-items-count').classList.add('hide')
+        }
         console.log(this.cart)
         this.getCartTotal()
         this.getCartDiscount()

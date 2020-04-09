@@ -87,6 +87,9 @@ const View = function (id, data) {
         `
         this.bindCartbehaviors()
         this.bindModalTriggers()
+        this.bindSlider()
+        this.bindHeaderButtons()
+        this.bindDesktopFilters()
     }
 
     /**
@@ -100,17 +103,48 @@ const View = function (id, data) {
         document.getElementById('main-content').innerHTML = list(this.filteredData)
         this.bindCartbehaviors()
         this.bindModalTriggers()
+        this.bindSlider()
+        this.bindHeaderButtons()
+        this.bindDesktopFilters()
+    }
+
+    // back to search page and input 
+    this.bindHeaderButtons = () => {
+        document.getElementById("logo").addEventListener('click', () => {
+            this.renderMainContent()
+        })
+
+        document.getElementById("search-input").addEventListener('keyup', e => {
+            this.searchList(e.currentTarget.value)
+        })
+    }
+
+    this.bindDesktopFilters = () => {
+        const els = document.getElementsByClassName('sort-option')
+        if (els.length > 0) {
+            for (const el of els) {
+                el.addEventListener('click', e => {
+                    this.filterParams.sort = e.currentTarget.id
+                    this.filterData()
+                })
+            }
+        }
     }
 
     // Modal trigger points - Sort and filter
     this.bindModalTriggers = () => {
-        document.getElementById('sort-trigger').addEventListener('click', () => {
-            this.showModal(this.sortTemplate)
-        })
-
-        document.getElementById('filter-trigger').addEventListener('click', () => {
-            this.showModal(this.filterTemplate)
-        })
+        const sortTrigger = document.getElementById('sort-trigger')
+        if (sortTrigger) {
+            sortTrigger.addEventListener('click', () => {
+                this.showModal(this.sortTemplate)
+            })
+        }
+        const filterTrigger = document.getElementById('filter-trigger')
+        if (filterTrigger) {
+            filterTrigger.addEventListener('click', () => {
+                this.showModal(this.filterTemplate)
+            })
+        }
     }
 
     // Modal button behaviors - apply and cancel
@@ -132,6 +166,11 @@ const View = function (id, data) {
             })   
         }
 
+        this.bindSlider()
+        console.log($("#slider-range").slider("values", 0), $("#slider-range").slider("values", 1))
+    }
+
+    this.bindSlider = () => {
         const that = this
         $("#slider-range").slider({
             range: true,
@@ -144,10 +183,7 @@ const View = function (id, data) {
                 console.log(that.filterParams)
             }
         });
-
-        console.log($("#slider-range").slider("values", 0), $("#slider-range").slider("values", 1))
     }
-
 
     /**
      *  Refresh the data set of filtered data
@@ -197,6 +233,26 @@ const View = function (id, data) {
                 return 0;
             })
         }
+    }
+
+    this.searchList = val => {
+        const cols = ['name']
+        this.filterObj = {}
+        this.filteredData = [...data]
+        
+        this.filteredData = this.filteredData.filter(el => {
+            for (const col of cols) {
+                if (el[col].toString().indexOf(val) > -1) {
+                    return el
+                }
+            }
+        })
+
+        const els = document.getElementsByClassName('search-input')
+        for (const input of els) {
+            input.value = ''
+        }
+        this.renderMainContent()
     }
 
     this.showModal = template => {

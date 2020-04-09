@@ -1,14 +1,18 @@
 const header = () => {
     return `
         <div class="app-header flex">
-            <div class="brand">Star</div>
+            <div class="brand">
+                <i id="logo" class="fa fa-lg fa-star"></i>
+            </div>
             <div class="right-panel">
                 <div>
-                    Search
+                    <input placeholder="Search" type="text" id="search-input">
+                    <i class="fa fa-lg fa-search"></i>
                 </div>
                 <div id="cart-link">
-                    Cart
-                    <span id="cart-items-count">0</span>
+                    <i class="fa fa-lg fa-shopping-cart">
+                        <span id="cart-items-count" class="hide">0</span>
+                    </i>
                 </div>
             </div>
         </div>

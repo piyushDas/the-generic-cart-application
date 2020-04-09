@@ -44,8 +44,9 @@ const cartContainer = (data, pricing) => {
         }
     } else {
         template =
-        `<div> No items in cart</div>
-        `
+        `<div class="no-cart-content">
+            No items in cart
+        </div>`
     }
     return template
 }
