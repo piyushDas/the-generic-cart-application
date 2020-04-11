@@ -6,7 +6,7 @@ const header = () => {
             </div>
             <div class="right-panel">
                 <div>
-                    <input placeholder="Search" type="text" id="search-input">
+                    <input type="text" id="search-input">
                     <i class="fa fa-lg fa-search"></i>
                 </div>
                 <div id="cart-link">

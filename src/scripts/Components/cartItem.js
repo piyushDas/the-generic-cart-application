@@ -1,6 +1,6 @@
 const cartItem = item => {
     const { number, cartItem } = item
-    const { name, actual, display, discount } = cartItem
+    const { id, name, actual, display, discount } = cartItem
 
     const imgHeight = "auto"
     const imgWidth = "auto"
@@ -23,12 +23,12 @@ const cartItem = item => {
                     <div class="product-discount-price">₹${display}</div>
                     <div class="product-discount">${discount}%off</div>
                 </div>
-                <div id="${name}" class="controls">
+                <div id="${id}" class="controls">
                     <div class="remove-item"> - </div>
                     <div>${number}</div>
                     <div class="add-item"> + </div>
                 </div>
-                <div id="delete">Remove</div>
+                <div id="cart--${id}" class="remove-group">Remove</div>
             </div>
         </div>
     </li>`

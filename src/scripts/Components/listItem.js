@@ -1,5 +1,5 @@
 const listItem = item => {
-    const { name, actual, display, discount } = item
+    const { id, name, actual, display, discount } = item
 
     const imgHeight = "auto"
     const imgWidth = "auto"
@@ -22,7 +22,7 @@ const listItem = item => {
                 <div class="product-discount">${discount}%off</div>
             </div>
             <div class="flex flex-center">
-                <button id="${name}" class="cart-button">Add to cart</button>
+                <button id="${id}" class="cart-button">Add to cart</button>
             </div>
         </div>
     </li>`

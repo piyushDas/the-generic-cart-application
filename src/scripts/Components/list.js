@@ -11,9 +11,16 @@ const list = data => {
     <div class="desktop-list">
         <div class="filter">
            <div>Filters</div>
-           <div id="slider-range"></div>
+           <div class="slider-container">
+                <div class="flex filter-values">
+                    <div id="min-price">0</div>
+                    <div id="max-price">100000</div>
+                </div>
+                <div class="slider-range" id="slider-range"></div>
+                <div class="filter-label">Price</div>
+           </div>
            <div>
-                <button class="apply"> Apply </button>
+                <button id="apply" class="apply"> Apply </button>
            </div>
         </div>
         <div class="list">

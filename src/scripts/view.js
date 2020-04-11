@@ -28,15 +28,21 @@ const View = function (id, data) {
                 max = dataItem.actual
             }
         }
-        this.filterParams.minPrice = min
-        this.filterParams.maxPrice = max
+        if (!Number.isFinite(this.filterParams.minPrice) && !Number.isFinite(this.filterParams.maxPrice)) {
+            this.filterParams.minPrice = min
+            this.filterParams.maxPrice = max
+            this.filterParams.iitialMinPrice = min
+            this.filterParams.initialMaxPrice = max
+        }
     }
 
     // filter state to be referred whenever filter/sort is invoked
     this.filterParams = {
         sort: '',
-        minPrice: 0,
-        maxPrice: 0
+        minPrice: null,
+        iitialMinPrice: null,
+        maxPrice: null,
+        initialMaxPrice: null
     }
 
     
@@ -65,7 +71,14 @@ const View = function (id, data) {
     // Template for filter popup
     this.filterTemplate =
         `<div class="modal-title"> Filter Options </div>
-        <div id="slider-range"></div>
+        <div class="slider-container">
+                <div class="flex filter-values">
+                    <div id="min-price">0</div>
+                    <div id="max-price">100000</div>
+                </div>
+                <div class="slider-range" id="slider-range"></div>
+                <div class="filter-label">Price</div>
+           </div>
         <div class="flex">
             <button id="cancel" type="button">Cancel</button>
             <button id="apply" type="button">Apply</button>
@@ -106,17 +119,31 @@ const View = function (id, data) {
         this.bindSlider()
         this.bindHeaderButtons()
         this.bindDesktopFilters()
+        if (this.cartInstance.cartCount > 0) {
+            document.getElementById('cart-items-count').classList.remove("hide")
+            document.getElementById('cart-items-count').innerHTML=this.cartInstance.cartCount
+        }
     }
 
     // back to search page and input 
     this.bindHeaderButtons = () => {
-        document.getElementById("logo").addEventListener('click', () => {
+        const renderFunc = () => {
+            this.filterParams.minPrice = this.filterParams.iitialMinPrice
+            this.filterParams.maxPrice = this.filterParams.maxPrice
+            this.filterParams.sort = ""
+            this.filterData()
             this.renderMainContent()
-        })
+        }
+        document.getElementById("logo").removeEventListener('click', renderFunc)
+        document.getElementById("logo").addEventListener('click', renderFunc)
 
-        document.getElementById("search-input").addEventListener('keyup', e => {
-            this.searchList(e.currentTarget.value)
-        })
+        const searchFunc = e => {
+            if (e.which === 13) {
+                this.searchList(e.currentTarget.value)
+            }
+        }
+        document.getElementById("search-input").removeEventListener('keyup', searchFunc)
+        document.getElementById("search-input").addEventListener('keyup', searchFunc)
     }
 
     this.bindDesktopFilters = () => {
@@ -129,6 +156,12 @@ const View = function (id, data) {
                 })
             }
         }
+        document.getElementById('apply').addEventListener('click', e => {
+            this.filterData()
+        })
+        const selectedSorter = document.getElementById(this.filterParams.sort)
+        if (selectedSorter)
+            selectedSorter.classList.add('active')
     }
 
     // Modal trigger points - Sort and filter
@@ -174,15 +207,19 @@ const View = function (id, data) {
         const that = this
         $("#slider-range").slider({
             range: true,
-            min: 0,
-            max: 500,
+            min: this.filterParams.iitialMinPrice,
+            max: this.filterParams.initialMaxPrice,
             values: [that.filterParams.minPrice, that.filterParams.maxPrice],
             slide: function( event, ui ) {
                 that.filterParams.minPrice = ui.values[0]
                 that.filterParams.maxPrice = ui.values[1]
                 console.log(that.filterParams)
+                document.getElementById('max-price').innerHTML = that.filterParams.maxPrice
+                document.getElementById('min-price').innerHTML = that.filterParams.minPrice
             }
         });
+        document.getElementById('max-price') ? document.getElementById('max-price').innerHTML = this.filterParams.maxPrice : ''
+        document.getElementById('min-price') ? document.getElementById('min-price').innerHTML = this.filterParams.minPrice : ''
     }
 
     /**
@@ -206,7 +243,15 @@ const View = function (id, data) {
             type = 'desc'
         }
         console.log(this.filterParams)
-        this.sorList(col, type)  
+        if (type) {
+            this.sorList(col, type)
+        }
+        this.filteredData = this.filteredData.filter(el => {
+            if (el.actual >= this.filterParams.minPrice && el.actual <= this.filterParams.maxPrice) {
+                return el
+            }
+        })
+        console.log(this.filteredData)
         this.renderMainContent()    
     }
 
@@ -242,7 +287,7 @@ const View = function (id, data) {
         
         this.filteredData = this.filteredData.filter(el => {
             for (const col of cols) {
-                if (el[col].toString().indexOf(val) > -1) {
+                if (el[col].toString().toLowerCase().indexOf(val.toLowerCase()) > -1) {
                     return el
                 }
             }
@@ -278,7 +323,7 @@ const View = function (id, data) {
         for (const addButton of addButtons) {
             addButton.addEventListener('click', e => {
                 for (const dataitem of this.filteredData) {
-                    if (e.currentTarget.id === dataitem.name) {
+                    if (e.currentTarget.id === dataitem.id) {
                         this.cartInstance.addToCart(dataitem)
                         break;
                     }
@@ -295,7 +340,7 @@ const View = function (id, data) {
         for (const cartAddBtn of cartAddBtns) {
             cartAddBtn.addEventListener('click', e => {
                 for (const dataitem of this.filteredData) {
-                    if (e.currentTarget.parentElement.id === dataitem.name) {
+                    if (e.currentTarget.parentElement.id === dataitem.id) {
                         this.cartInstance.addToCart(dataitem)
                         break;
                     }
@@ -309,8 +354,8 @@ const View = function (id, data) {
         for (const cartRemoveBtn of cartRemoveBtns) {
             cartRemoveBtn.addEventListener('click', e => {
                 for (const dataitem of this.filteredData) {
-                    if (e.currentTarget.parentElement.id === dataitem.name) {
-                        this.cartInstance.removeFromCart(dataitem.name)
+                    if (e.currentTarget.parentElement.id === dataitem.id) {
+                        this.cartInstance.removeFromCart(dataitem.id)
                         break;
                     }
                 }
@@ -318,6 +363,22 @@ const View = function (id, data) {
                 this.bindCartbehaviors()
             })
         }
+
+        const removeGrps = document.getElementsByClassName('remove-group')
+        for (const cartRemoveBtn of removeGrps) {
+            cartRemoveBtn.addEventListener('click', e => {
+                for (const dataitem of this.filteredData) {
+                    const compId = e.currentTarget.id.split('--')
+                    if (compId[1] === dataitem.id) {
+                        this.cartInstance.removeItemGroupFromCart(dataitem.id)
+                        break;
+                    }
+                }
+                this.cartInstance.renderTemplate()
+                this.bindCartbehaviors()
+            })
+        }
+
     }
 }
 

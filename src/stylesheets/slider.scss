@@ -1,18 +1,47 @@
 @import './variables';
-.ui-widget-content {
-    margin: 24px;
-    &.ui-slider-horizontal{
-        border: none;
-        background: #ccc;
-        height: 2px;
+.slider-container{
+    position: relative;
+    .filter-values{
+        position: absolute;
+        top: -25px;
+        width: 90%;
+        font-size: 12px;
+        margin: 0 5%;
+        display: flex;
+        > div {
+            width: 50%;
+            text-align: right;
+            &:first-of-type {
+                text-align: left;
+            }
+        }   
     }
-    .ui-widget-header {
-        background: $slider-bar-color;
+    .filter-label{
+        position: absolute;
+        top: 8px;
+        font-size: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: $secondary-font-color;
     }
-
-    .ui-slider-handle {
-        top: -.55em;
-        margin-left: -.6em;
-        border-radius: 20px;
+    .ui-widget-content {
+        margin: 24px;
+        &.ui-slider-horizontal{
+            border: none;
+            background: #ccc;
+            height: 2px;
+        }
+        .ui-widget-header {
+            background: $slider-bar-color;
+        }
+    
+        .ui-slider-handle {
+            top: -.55em;
+            margin-left: -.6em;
+            border-radius: 20px;
+        }
+    }
+    .slider-range{
+        position: relative;
     }
 }

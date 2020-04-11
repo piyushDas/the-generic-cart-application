@@ -1,11 +1,11 @@
 import cartContainer from './cartContainer.js'
 const Cart = function () {
     this.cart = []
-
+    this.cartCount = 0
     this.findItem = id => {
         if (this.cart.length > 0) {
             for (const item of this.cart) {
-                if (item.cartItem.name === id) {
+                if (item.cartItem.id === id) {
                     return item
                 }
             }
@@ -14,7 +14,7 @@ const Cart = function () {
     }
 
     this.addToCart = item => {
-        const selected = this.findItem(item.name) || {}
+        const selected = this.findItem(item.id) || {}
         if (selected.number > 0) {
             selected.number += 1
         } else {
@@ -23,6 +23,7 @@ const Cart = function () {
                 number: 1
             })
         }
+        this.cartCount += 1
         this.renderCart()
     }
 
@@ -30,9 +31,9 @@ const Cart = function () {
         let delIndex
         if (this.cart.length > 0) {
             for (const [index, item] of this.cart.entries()) {
-                if (item.cartItem.name === id && item.number > 1) {
+                if (item.cartItem.id === id && item.number > 1) {
                     item.number -= 1
-                } else if (item.cartItem.name === id && item.number === 1) {
+                } else if (item.cartItem.id === id && item.number === 1) {
                     delIndex = index
                 }
             }
@@ -41,12 +42,30 @@ const Cart = function () {
         if (Number.isFinite(delIndex)) {
             this.cart.splice(delIndex, 1)
         }
+        this.cartCount -= 1
+        this.renderCart()
+    }
+
+    this.removeItemGroupFromCart = id => {
+        let delIndex
+        if (this.cart.length > 0) {
+            for (const [index, item] of this.cart.entries()) {
+                if (item.cartItem.id === id) {
+                    delIndex = index
+                }
+            }
+        }
+
+        if (Number.isFinite(delIndex)) {
+            this.cartCount -= this.cart[delIndex].number
+            this.cart.splice(delIndex, 1)
+        }
         this.renderCart()
     }
 
 
     this.renderCart = () => {
-        document.getElementById('cart-items-count').innerHTML = this.cart.length || 0
+        document.getElementById('cart-items-count').innerHTML = this.cartCount > 0 ? this.cartCount : 0
         if (this.cart.length > 0) {
             document.getElementById('cart-items-count').classList.remove('hide')
         } else {
@@ -63,6 +82,7 @@ const Cart = function () {
             discount: this.getCartDiscount()
         }
         document.getElementById('main-content').innerHTML = cartContainer(this.cart, pricing)
+        document.getElementById('cart-items-count').classList.add('hide')
     }
 
     this.getCartTotal = () => {
